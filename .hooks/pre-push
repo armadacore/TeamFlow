@@ -1,0 +1,30 @@
+#!/bin/sh
+# pre-push Hook to enforce branch naming conventions
+
+# Function to check if the branch follows naming conventions
+check_branch_name() {
+  branch_name=$1
+  if echo "$branch_name" | grep -Eq '^(master|develop)$'; then
+    return 0
+  elif echo "$branch_name" | grep -Eq '^(hotfix|release|feature)/tf-[0-9]+-[a-z0-9-]+$'; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+# Get the current branch name
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
+
+# Debugging: Ausgabe des Branch-Namens zur Überprüfung
+echo "Debug: Current branch name is '$BRANCH_NAME'"
+
+if ! check_branch_name "$BRANCH_NAME"; then
+  echo "Error: Branch name '$BRANCH_NAME' does not follow the required naming conventions."
+  echo "Allowed patterns: 'hotfix/tf-id-name', 'release/tf-id-name', 'feature/tf-id-name'."
+  echo "Master and develop branches are allowed."
+  exit 1
+fi
+
+# Success
+exit 0

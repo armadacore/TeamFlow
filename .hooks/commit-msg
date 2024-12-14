@@ -1,0 +1,44 @@
+#!/bin/sh
+# Commit-msg Hook to validate commit messages
+
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+print_error_message() {
+  echo "=======================================================================" >&2
+  echo "Error: The commit message should follow this format:" >&2
+  echo "subject" >&2
+  echo "body (optional)" >&2
+  echo "#id" >&2
+  echo "=======================================================================" >&2
+}
+
+# Get the current branch name
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
+
+# Branches to exclude
+EXCLUDED_BRANCHES="master develop"
+
+# Skip validation for excluded branches
+for branch in $EXCLUDED_BRANCHES; do
+  if [ "$BRANCH_NAME" = "$branch" ]; then
+    echo "Debug: Branch '$BRANCH_NAME' is excluded from commit message validation."
+    exit 0
+  fi
+done
+
+# Check if the commit message follows the required format
+if ! echo "$COMMIT_MSG" | grep -Eq '^[^\n]+$'; then
+  print_error_message
+  exit 1
+fi
+
+# Check for issue id in the last non-empty line
+ISSUE_ID=$(echo "$COMMIT_MSG" | awk 'NF { last = $0 }; END { print last }')
+if ! echo "$ISSUE_ID" | grep -Eq '^#[0-9a-zA-Z]+$'; then
+  print_error_message
+  exit 1
+fi
+
+# Success
+exit 0
