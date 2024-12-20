@@ -4,15 +4,16 @@
   "version": "0.1.0",
   "identifier": "com.armadacore.teamflow",
   "build": {
-    "beforeDevCommand": "npm run dev",
+    "beforeDevCommand": "trunk serve",
     "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "npm run build",
+    "beforeBuildCommand": "trunk build",
     "frontendDist": "../dist"
   },
   "app": {
+    "withGlobalTauri": true,
     "windows": [
       {
-        "title": "teamflow",
+        "title": "TeamFlow",
         "width": 800,
         "height": 600
       }
