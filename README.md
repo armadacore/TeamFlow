@@ -50,14 +50,24 @@ My goal is to build a small, engaged community around TeamFlow. If you're intere
 
 ## Installation and Setup
 
-TeamFlow is still in development, and no stable release is currently available. Developers who want to contribute can set up the environment as follows:
+TeamFlow is still under development, and no stable release is currently available. Developers who want to contribute can set up the environment as follows:
 
 1. Install **Rust** via [rustup](https://rustup.rs/).
 2. Make sure your Rust toolchain is up to date:
    ```bash
    rustup update
    ```
-3. Optionally, install the `wasm32-unknown-unknown` target if WebAssembly is required:
+3. Install `cargo-trunk`, a build tool for Rust projects that simplifies building frontend WebAssembly code:
+   ```bash
+   cargo install trunk
+   ```
+4. Install `stylance`, a CSS-in-Rust utility used by the project:
+   ```bash
+   cargo install stylance
+   ```
+5. Optionally, install the `wasm32-unknown-unknown` target if WebAssembly is required:
    ```bash
    rustup target add wasm32-unknown-unknown
    ```
+
+Once all dependencies are installed, you should be ready to build and run the project. If you encounter any issues, feel free to report them!
