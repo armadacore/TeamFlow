@@ -1,3 +1,5 @@
+![early development stage](https://img.shields.io/badge/early%20development%20stage-red?style=plastic)
+
 # TeamFlow
 
 **TeamFlow** is a tool designed to simplify application development through a modular app system. It provides a flexible foundation for creating desktop applications that are secure and extendable.
