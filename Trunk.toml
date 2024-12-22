@@ -1,8 +1,13 @@
 [build]
 target = "./index.html"
 
+[[hooks]]
+stage = "pre_build"
+command = "stylance"
+command_arguments = [".", "--output-file", "styles/bundle.css"]
+
 [watch]
-ignore = ["./src-tauri"]
+ignore = ["./src-tauri", "styles/bundle.css"]
 
 [serve]
 port = 1420

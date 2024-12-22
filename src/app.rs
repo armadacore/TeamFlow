@@ -1,6 +1,7 @@
 use leptos::leptos_dom::ev::SubmitEvent;
 use leptos::*;
 use serde::{Deserialize, Serialize};
+use stylance::*;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -16,6 +17,9 @@ struct GreetArgs<'a> {
 
 #[component]
 pub fn App() -> impl IntoView {
+    import_crate_style!(style, "src/foobar.css");
+
+
     let (name, set_name) = create_signal(String::new());
     let (greet_msg, set_greet_msg) = create_signal(String::new());
 
@@ -40,28 +44,30 @@ pub fn App() -> impl IntoView {
     };
 
     view! {
-        <main class="container">
-            <h1>"Welcome to Tauri + Leptos"</h1>
+        <div>
+            <main class=style::container>
+                <h1>"Welcome to Tauri + Leptos"</h1>
 
-            <div class="row">
-                <a href="https://tauri.app" target="_blank">
-                    <img src="public/tauri.svg" class="logo tauri" alt="Tauri logo"/>
-                </a>
-                <a href="https://docs.rs/leptos/" target="_blank">
-                    <img src="public/leptos.svg" class="logo leptos" alt="Leptos logo"/>
-                </a>
-            </div>
-            <p>"Click on the Tauri and Leptos logos to learn more."</p>
+                <div class=style::row>
+                    <a href="https://tauri.app" target="_blank">
+                        <img src="public/tauri.svg" class="logo tauri" alt="Tauri logo"/>
+                    </a>
+                    <a href="https://docs.rs/leptos/" target="_blank">
+                        <img src="public/leptos.svg" class="logo leptos" alt="Leptos logo"/>
+                    </a>
+                </div>
+                <p>"Click on the Tauri and Leptos logos to learn more."</p>
 
-            <form class="row" on:submit=greet>
-                <input
-                    id="greet-input"
-                    placeholder="Enter a name..."
-                    on:input=update_name
-                />
-                <button type="submit">"Greet"</button>
-            </form>
-            <p>{ move || greet_msg.get() }</p>
-        </main>
+                <form class="row" on:submit=greet>
+                    <input
+                        id="greet-input"
+                        placeholder="Enter a name..."
+                        on:input=update_name
+                    />
+                    <button type="submit">"Greet"</button>
+                </form>
+                <p>{ move || greet_msg.get() }</p>
+            </main>
+        </div>
     }
 }
