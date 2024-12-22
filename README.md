@@ -71,3 +71,12 @@ TeamFlow is still under development, and no stable release is currently availabl
    ```
 
 Once all dependencies are installed, you should be ready to build and run the project. If you encounter any issues, feel free to report them!
+
+**Configure Git Hooks:**
+After cloning the repository, navigate to the root directory of the project and execute the following commands to set up Git hooks:
+   ```bash
+   git config core.hooksPath .hooks
+   chmod +x ./.hooks/commit-msg
+   chmod +x ./.hooks/prepare-commit-msg
+   chmod +x ./.hooks/pre-push
+   ```
