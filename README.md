@@ -61,7 +61,7 @@ TeamFlow is still under development, and no stable release is currently availabl
    ```bash
    cargo install trunk
    ```
-4. Install `[stylance](https://github.com/basro/stylance-rs)`, a CSS-in-Rust utility used by the project:
+4. Install **[stylance](https://github.com/basro/stylance-rs)**, a CSS-in-Rust utility used by the project:
    ```bash
    cargo install stylance
    ```
