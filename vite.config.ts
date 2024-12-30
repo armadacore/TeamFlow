@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import tsconfigPaths from 'vite-tsconfig-paths'
+import tsconfigPaths from 'vite-tsconfig-paths';
 import react from "@vitejs/plugin-react";
 
 // @ts-expect-error process is a nodejs global
