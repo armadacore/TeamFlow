@@ -1,21 +1,20 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "teamflow",
+  "productName": "TeamFlow",
   "version": "0.1.0",
   "identifier": "com.armadacore.teamflow",
   "build": {
-    "beforeDevCommand": "trunk serve",
+    "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "trunk build",
+    "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist"
   },
   "app": {
-    "withGlobalTauri": true,
     "windows": [
       {
-        "title": "TeamFlow",
-        "width": 800,
-        "height": 600
+        "title": "teamflow",
+        "minWidth": 1200,
+        "minHeight": 800
       }
     ],
     "security": {
