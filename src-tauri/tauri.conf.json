@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "teamflow",
+        "title": "TeamFlow",
         "minWidth": 1200,
         "minHeight": 800
       }
