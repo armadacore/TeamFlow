@@ -2,72 +2,34 @@
 
 # TeamFlow
 
-**TeamFlow** is a tool designed to simplify application development through a modular app system. It provides a flexible foundation for creating desktop applications that are secure and extendable.
+**TeamFlow** is a tool designed to improve project and task management. It aims to help teams and developers organize their workflows more efficiently and boost productivity.
 
-## Project Status
+## What Makes TeamFlow Unique?
 
-TeamFlow is currently in an early development stage. The features implemented so far are only a starting point, and many more are planned for the future. Contributions from other developers are welcome to help move the development forward.
+TeamFlow puts a strong emphasis on extensibility and adaptability. The platform is designed to be easily enhanced with new tools and extensions to meet the specific needs of projects and their respective contexts. This allows for great flexibility, enabling users to tailor their management tools to their unique requirements.
 
-## Project Description
+## Goals of TeamFlow
 
-TeamFlow is designed to offer developers an easy way to create functional applications using reusable, modular components. A built-in app store is planned, which will allow users to browse and add additional modules (apps) to meet their specific requirements.
+- **Effective Project Management:** Clear organization of projects and their tasks.
+- **Extensibility:** Easy development of new tools and extensions that integrate seamlessly into the platform.
+- **Context-Specific Adaptation:** Users can customize TeamFlow to their individual work context to ensure optimal workflow support.
 
-### Key Features (Planned)
+## Note
 
-- **Modularity:** Applications can be extended by integrating different apps.
-- **Security Focus:** TeamFlow follows the `secure-by-default` principle, ensuring that applications are secure by design. User data is only collected when explicitly consented to.
-- **Flexible Resource Access:** Controlled access to core resources like databases, the filesystem, networks, and other functionalities will be provided.
-- **Ease of Extensibility:** The platform will provide interfaces to develop your own apps and integrate them into the app store.
+TeamFlow is still in an early development phase. This means we are actively working on new features and improving existing ones.
 
-### Objective
+We warmly invite everyone interested to join us on this journey. Whether through feedback, suggestions, or voluntary contributions – every bit of support is valuable. Together, we can improve TeamFlow and make it a tool that makes team workflows significantly easier.
 
-The goal of TeamFlow is to create a platform that allows developers to focus on the core functionalities of their applications while essential building blocks (like data access and security) are handled by the platform itself.
+### Technologies
 
-## Technologies
+TeamFlow is built on a combination of modern technologies that ensure security, flexibility, and user-friendliness:
 
-TeamFlow is built using the following technologies:
+- **[Tauri](https://tauri.app/):** A framework for lightweight and secure desktop applications.
+- **[React](https://react.dev/):** A JavaScript library for building interactive and dynamic user interfaces.
+- **[TypeScript](https://www.typescriptlang.org/):** For clear, typed, and maintainable development.
 
-- **[Tauri](https://tauri.app/):** A framework for building secure and lightweight desktop applications.
-- **[Leptos](https://github.com/leptos-rs/leptos):** A Rust library for reactive web and desktop interfaces.
-- **[Rust](https://www.rust-lang.org/):** A programming language known for its safety, performance, and reliability.
+---
 
-## Target Audience
+## License
 
-TeamFlow is aimed at developers who are looking for a secure, modular, and flexible foundation for building desktop applications.
-
-## Contributing
-
-Developers who feel passionate about TeamFlow and want to help shape the project are warmly invited to contribute. Any kind of help — whether through improvements, new ideas, or fixing bugs — is welcome.
-
-### How to Contribute
-
-1. **Fork the Project:** Create a fork of the TeamFlow repository.
-2. **Make Your Changes:** Work on the changes or improvements you wish to implement.
-3. **Submit a Pull Request:** Submit a pull request to propose your changes for discussion and possible inclusion in the project.
-4. **Provide Feedback:** If you're not ready to code just yet, feel free to provide feedback, suggestions, or report bugs using the issue tracker.
-
-My goal is to build a small, engaged community around TeamFlow. If you're interested in developing any of the planned features or have your own ideas to bring to the table, it would be fantastic to have you onboard!
-
-## Installation and Setup
-
-TeamFlow is still under development, and no stable release is currently available. Developers who want to contribute can set up the environment as follows:
-
-1. Install **Rust** via [rustup](https://rustup.rs/).
-2. Make sure your Rust toolchain is up to date:
-   ```bash
-   rustup update
-   ```
-3. Install `cargo-trunk`, a build tool for Rust projects that simplifies building frontend WebAssembly code:
-   ```bash
-   cargo install trunk
-   ```
-4. Install `stylance`, a CSS-in-Rust utility used by the project:
-   ```bash
-   cargo install stylance
-   ```
-5. Optionally, install the `wasm32-unknown-unknown` target if WebAssembly is required:
-   ```bash
-   rustup target add wasm32-unknown-unknown
-   ```
-
-Once all dependencies are installed, you should be ready to build and run the project. If you encounter any issues, feel free to report them!
+This project is licensed under the **MIT License**. For more details, see the [LICENSE](./LICENSE) file.
