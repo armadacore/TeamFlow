@@ -51,7 +51,7 @@ jobs:
         run: npm ci --force
 
       - name: Check eslint
-        run: eslint:check
+        run: npm run eslint:check
 
       - name: Check TypeScript type
         run: npm run type:check
