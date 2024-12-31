@@ -34,7 +34,7 @@ jobs:
       - name: Check outdated
         run: npm run outdated:check
 
-  code_check:
+  code-check:
     needs: vulnerability-check
     if: ${{ success() }}
     runs-on: ubuntu-latest
