@@ -1,0 +1,56 @@
+name: Development gate
+
+on:
+  push:
+    - '**'
+    - '!master'
+    - '!develop'
+
+  pull_request:
+    - '**'
+    - '!master'
+    - '!develop'
+
+jobs:
+  vulnerability_check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci --force
+
+      - name: Check licenses
+        run: npm run license:check
+
+      - name: Check outdated
+        run: npm run outdated:check
+
+  code_check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci --force
+
+      - name: Check eslint
+        run: eslint:check
+
+      - name: Check TypeScript type
+        run: npm run type:check
+
+      - name: Unit test
+        run: npm run test
