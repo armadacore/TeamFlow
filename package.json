@@ -14,7 +14,7 @@
 		"eslint:check": "eslint ./src && tsc --project tsconfig.json --noEmit",
 		"type:check": "tsc --noEmit",
 		"license:check": "npx jsgl --dev false --verbose true --local ./",
-		"outdated:check": "check-outdated --ignore-pre-releases --columns name,type,current,latest,changes --types major,minor,reverted"
+		"outdated:check": "check-outdated --ignore-pre-releases --ignore-packages @tauri-apps/api --columns name,type,current,latest,changes --types major,minor,reverted"
 	},
 	"dependencies": {
 		"@armadacore/fnt": "^0.4.1",
