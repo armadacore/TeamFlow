@@ -2,7 +2,7 @@ import globals from "globals";
 import pluginJs from "@eslint/js";
 import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
-
+import prettierRecommended from 'eslint-plugin-prettier/recommended';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -18,6 +18,7 @@ export default [
 	pluginJs.configs.recommended,
 	...tseslint.configs.recommendedTypeChecked,
 	pluginReact.configs.flat.recommended,
+	prettierRecommended,
 	{
 		rules: {
 			'no-console': 'warn',
@@ -45,7 +46,7 @@ export default [
 				{
 					selector: 'default',
 					leadingUnderscore: 'allowSingleOrDouble',
-					format: ['camelCase']
+					format: ['camelCase', 'PascalCase', 'UPPER_CASE']
 				},
 				{ selector: 'typeLike', format: ['PascalCase'] },
 				{
