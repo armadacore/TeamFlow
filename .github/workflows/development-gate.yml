@@ -14,7 +14,7 @@ on:
       - '!develop'
 
 jobs:
-  vulnerability_check:
+  vulnerability-check:
     runs-on: ubuntu-latest
     steps:
       - name: Install nodejs
@@ -35,7 +35,7 @@ jobs:
         run: npm run outdated:check
 
   code_check:
-    needs: vulnerability_check
+    needs: vulnerability-check
     if: ${{ success() }}
     runs-on: ubuntu-latest
     steps:
