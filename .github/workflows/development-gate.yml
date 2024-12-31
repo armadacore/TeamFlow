@@ -2,14 +2,16 @@ name: Development gate
 
 on:
   push:
-    - '**'
-    - '!master'
-    - '!develop'
+    branches:
+      - '**'
+      - '!master'
+      - '!develop'
 
   pull_request:
-    - '**'
-    - '!master'
-    - '!develop'
+    branches:
+      - '**'
+      - '!master'
+      - '!develop'
 
 jobs:
   vulnerability_check:
