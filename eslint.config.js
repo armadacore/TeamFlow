@@ -6,7 +6,7 @@ import pluginReact from "eslint-plugin-react";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
-	{ignores: ['@types/**/*', 'dist/**/*', 'src-tauri/**/*', '*.config.ts', 'tsconfig.json']},
+	{ignores: ['@types/**/*', 'dist/**/*', 'src-tauri/**/*', '__tests/**/*', '*.config.ts', 'tsconfig.json']},
 	{files: ["**/*.{ts,tsx}"]},
 	{languageOptions: {
 		globals: globals.browser,
