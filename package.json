@@ -1,8 +1,8 @@
 {
 	"name": "teamflow",
-	"private": true,
 	"version": "0.1.0",
 	"type": "module",
+	"license": "MIT",
 	"scripts": {
 		"vite:dev": "vite",
 		"vite:build": "tsc && vite build",
@@ -12,7 +12,8 @@
 		"test:ui": "vitest --ui",
 		"test:coverage:ui": "vitest --coverage --ui",
 		"eslint:check": "eslint ./src && tsc --project tsconfig.json --noEmit",
-		"type:check": "tsc --noEmit"
+		"type:check": "tsc --noEmit",
+		"license:check": "npx jsgl --dev false --verbose true --local ./"
 	},
 	"dependencies": {
 		"@armadacore/fnt": "^0.4.1",
@@ -34,6 +35,7 @@
 		"eslint-plugin-prettier": "^5.2.1",
 		"eslint-plugin-react": "^7.37.3",
 		"globals": "^15.14.0",
+		"js-green-licenses": "^4.0.0",
 		"jsdom": "^25.0.1",
 		"prettier": "^3.4.2",
 		"typescript": "^5.7.2",
