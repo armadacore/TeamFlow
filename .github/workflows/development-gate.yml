@@ -82,11 +82,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-#          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         run: npm run tauri build -- --target aarch64-apple-darwin
+
+      - name: Fix macOS app attributes
+        run: xattr -cr ./src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
 
       - name: Upload .app as artifact
         uses: actions/upload-artifact@v3
         with:
           name: macos-app
-          path: '/Users/runner/work/TeamFlow/TeamFlow/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app.tar.gz'
+          path: './src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app'
