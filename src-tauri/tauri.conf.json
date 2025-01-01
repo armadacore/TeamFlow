@@ -33,11 +33,11 @@
 			"icons/icon.ico"
 		],
 		"macOS": {
+			"entitlements": null,
 			"exceptionDomain": null,
 			"frameworks": [],
 			"minimumSystemVersion": null,
-			"signingIdentity": null,
-			"entitlementsFile": null
+			"signingIdentity": null
 		}
 	},
 	"plugins": {
