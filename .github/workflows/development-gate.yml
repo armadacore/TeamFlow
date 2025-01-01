@@ -78,21 +78,41 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci --force
 
+      - name: Import Apple Certificate
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          # Entpacke die Base64-kodierte Zertifikat-Datei
+          echo "$APPLE_CERTIFICATE" | base64 --decode > apple_certificate.p12
+
+          # Importiere das Zertifikat in den macOS-Schlüsselbund
+          security create-keychain -p "" build.keychain
+          security import apple_certificate.p12 -k build.keychain -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+
+          # Stelle sicher, dass das Zertifikat verfügbar ist
+          security list-keychains -s build.keychain
+          security default-keychain -s build.keychain
+
+          # Entsperre den Schlüsselbund
+          security unlock-keychain -p "" build.keychain
+
+          # Berechtigung für den Prozess hinzufügen
+          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
+
       - name: Build Tauri app
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-        run: npm run tauri build --no-sign -- --target aarch64-apple-darwin
+        run: npm run tauri build -- --target aarch64-apple-darwin
 
-      - name: Fix macOS dmg attributes
-        run: xattr -cr /Users/runner/work/TeamFlow/TeamFlow/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
+      - name: Verify Signed App
+        run: codesign -dv --verbose=4 ./src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
 
-      - name: Remove hidden files like .DS_Store
-        run: find /Users/runner/work/TeamFlow/TeamFlow/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app -name ".*" -exec rm -f {} \;
-
-      - name: Check if app is signed
-        run: codesign -dv --verbose=4 /Users/runner/work/TeamFlow/TeamFlow/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
+      - name: Check Gatekeeper Assessment
+        run: spctl --assess --verbose ./src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
 
       - name: Compress TeamFlow.app
         run: zip -r TeamFlow-app.zip ./src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
