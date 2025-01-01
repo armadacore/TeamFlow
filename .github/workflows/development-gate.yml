@@ -88,8 +88,11 @@ jobs:
       - name: Fix macOS app attributes
         run: xattr -cr ./src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
 
+      - name: Compress TeamFlow.app
+        run: zip -r TeamFlow-app.zip ./src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
+
       - name: Upload .app as artifact
         uses: actions/upload-artifact@v3
         with:
-          name: macos-app
-          path: './src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app'
+          name: TeamFlow-macos-app
+          path: TeamFlow-app.zip
