@@ -52,3 +52,16 @@ jobs:
 
       - name: Unit test
         run: npm run test
+
+  debuggin:
+    needs: vulnerability-check
+    if: ${{ success() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Keys
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: |
+          echo " TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}"
