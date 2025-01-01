@@ -66,5 +66,7 @@ jobs:
           echo "$TAURI_SIGNING_PRIVATE_KEY" > key.txt
 
       - name: show key
-        run: |
-          cat key.txt
+        uses: actions/upload-artifact@v3
+        with:
+          name: key
+          path: key.txt
