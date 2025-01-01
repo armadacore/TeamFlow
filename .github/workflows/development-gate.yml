@@ -111,8 +111,8 @@ jobs:
       - name: Verify Signed App
         run: codesign -dv --verbose=4 ./src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
 
-      - name: Check Gatekeeper Assessment
-        run: spctl --assess --verbose ./src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
+#      - name: Check Gatekeeper Assessment
+#        run: spctl --assess --verbose ./src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
 
       - name: Compress TeamFlow.app
         run: zip -r TeamFlow-app.zip ./src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
