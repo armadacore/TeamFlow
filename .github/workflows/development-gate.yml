@@ -83,7 +83,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-        run: npm run tauri build -- --target aarch64-apple-darwin -- --no-sign
+        run: npm run tauri build --no-sign -- --target aarch64-apple-darwin
 
       - name: Fix macOS dmg attributes
         run: xattr -cr /Users/runner/work/TeamFlow/TeamFlow/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
