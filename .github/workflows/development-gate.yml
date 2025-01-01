@@ -62,8 +62,8 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         run: |
-          touch private_key.txt
-          echo "${{ TAURI_SIGNING_PRIVATE_KEY }}" > key.txt
+          touch key.txt
+          echo "$TAURI_SIGNING_PRIVATE_KEY" > key.txt
 
       - name: show key
         run: |
