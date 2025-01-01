@@ -31,7 +31,15 @@
 			"icons/128x128@2x.png",
 			"icons/icon.icns",
 			"icons/icon.ico"
-		]
+		],
+		"macOS": {
+			"entitlements": null,
+			"exceptionDomain": null,
+			"frameworks": [],
+			"minimumSystemVersion": null,
+			"signingIdentity": null,
+			"entitlementsFile": null
+		}
 	},
 	"plugins": {
 		"updater": {
@@ -40,13 +48,5 @@
 				"https://github.com/armadacore/TeamFlow/releases/latest/download/latest.json"
 			]
 		}
-	},
-	"macOS": {
-		"entitlements": null,
-		"exceptionDomain": null,
-		"frameworks": [],
-		"minimumSystemVersion": null,
-		"signingIdentity": null,
-		"entitlementsFile": null
 	}
 }
