@@ -13,7 +13,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # for Arm based macs (M1 and above).
           - platform: 'macos-latest'
             args: '--target aarch64-apple-darwin'
 #          - platform: 'ubuntu-24.04'
@@ -40,7 +39,6 @@ jobs:
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          # Those targets are only used on macos runners so it's in an `if` to slightly speed up windows and linux builds.
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin' || '' }}
 
       - name: Rust cache
@@ -61,6 +59,6 @@ jobs:
           tagName: v__VERSION__
           releaseName: 'v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'
-          releaseDraft: true
+          releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
