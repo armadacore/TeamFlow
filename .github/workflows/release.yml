@@ -16,10 +16,10 @@ jobs:
           # for Arm based macs (M1 and above).
           - platform: 'macos-latest'
             args: '--target aarch64-apple-darwin'
-          - platform: 'ubuntu-24.04'
-            args: ''
-          - platform: 'windows-latest'
-            args: ''
+#          - platform: 'ubuntu-24.04'
+#            args: ''
+#          - platform: 'windows-latest'
+#            args: ''
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout code
@@ -51,12 +51,13 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci --force
 
-      - uses: tauri-apps/tauri-action@v0
+      - name: Release tauri.app
+        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: v__VERSION__
-          releaseName: 'v__VERSION__'
+          tagName: app-v__VERSION__
+          releaseName: 'App v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
           prerelease: false
