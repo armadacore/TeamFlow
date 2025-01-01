@@ -85,8 +85,14 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         run: npm run tauri build -- --target aarch64-apple-darwin
 
+      - name: Debug Check attributes before fix
+        run: xattr -l /Users/runner/work/TeamFlow/TeamFlow/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app || echo "No attributes"
+
       - name: Fix macOS dmg attributes
         run: xattr -cr /Users/runner/work/TeamFlow/TeamFlow/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
+
+      - name: Debug Check attributes after fix
+        run: xattr -l /Users/runner/work/TeamFlow/TeamFlow/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app || echo "No attributes"
 
       - name: Compress TeamFlow.app
         run: zip -r TeamFlow-app.zip ./src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
