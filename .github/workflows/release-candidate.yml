@@ -32,19 +32,19 @@ jobs:
         run: npm run outdated:check
 
       - name: Get version from package.json
-        if: ${{ github.ref_name == 'develop' }}
+        if: ${{ github.event.pull_request.base.ref == 'develop' || github.ref_name == 'develop' }}
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.3.1
 
       - name: Check tag
-        if: ${{ github.ref_name == 'develop' }}
+        if: ${{ github.event.pull_request.base.ref == 'develop' || github.ref_name == 'develop' }}
         uses: mukunku/tag-exists-action@v1.6.0
         id: check-tag
         with:
           tag: v${{ steps.package-version.outputs.current-version}}
 
       - name: Tag exists
-        if: github.ref_name == 'develop' && steps.check-tag.outputs.exists == 'true'
+        if: ${{ (github.event.pull_request.base.ref == 'develop' || github.ref_name == 'develop') && steps.check-tag.outputs.exists == 'true' }}
         run: |
           echo "Please update version in package.json"
           exit 1
