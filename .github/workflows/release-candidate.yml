@@ -31,6 +31,24 @@ jobs:
       - name: Check outdated
         run: npm run outdated:check
 
+      - name: Get version from package.json
+        if: ${{ github.event.pull_request.base.ref == 'develop' || github.ref_name == 'develop' }}
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+
+      - name: Check tag
+        if: ${{ github.event.pull_request.base.ref == 'develop' || github.ref_name == 'develop' }}
+        uses: mukunku/tag-exists-action@v1.6.0
+        id: check-tag
+        with:
+          tag: v${{ steps.package-version.outputs.current-version}}
+
+      - name: Tag exists
+        if: ${{ (github.event.pull_request.base.ref == 'develop' || github.ref_name == 'develop') && steps.check-tag.outputs.exists == 'true' }}
+        run: |
+          echo "Please update version in package.json"
+          exit 1
+
   code-check:
     needs: vulnerability-check
     if: ${{ success() }}
@@ -63,3 +81,22 @@ jobs:
           files: ./.tests/coverage/lcov.info
           slug: armadacore/TeamFlow
           fail_ci_if_error: true
+
+  release-it:
+    needs: code-check
+    if: ${{ success() && github.event.pull_request.base.ref == 'master' && github.event.pull_request.merged == true}}
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        include:
+#          - platform: 'macos-latest' # for Arm based macs (M1 and above).
+#            args: '--target aarch64-apple-darwin'
+#          - platform: 'ubuntu-22.04'
+#            args: ''
+#          - platform: 'windows-latest'
+#            args: ''
+#    runs-on: ${{ matrix.platform }}
+    steps:
+        - name: Debug release
+          run: |
+            echo "Debug release"
