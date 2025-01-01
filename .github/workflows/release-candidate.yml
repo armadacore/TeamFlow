@@ -97,6 +97,6 @@ jobs:
 #            args: ''
 #    runs-on: ${{ matrix.platform }}
     steps:
-        - name: Debug release
-          run: |
-            echo "Debug release"
+      - name: Debug release
+        run: |
+          echo "Debug release"
