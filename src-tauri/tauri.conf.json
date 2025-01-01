@@ -40,5 +40,13 @@
 				"https://github.com/armadacore/TeamFlow/releases/latest/download/latest.json"
 			]
 		}
+	},
+	"macOS": {
+		"entitlements": null,
+		"exceptionDomain": null,
+		"frameworks": [],
+		"minimumSystemVersion": null,
+		"signingIdentity": null,
+		"entitlementsFile": null
 	}
 }
