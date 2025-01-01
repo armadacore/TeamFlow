@@ -85,6 +85,10 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         run: npm run tauri build -- --target aarch64-apple-darwin
 
+      - name:
+          Debug: Check if .app exists
+        run: ls -l ./src-tauri/target/aarch64-apple-darwin/release/bundle/macos/
+
       - name: Fix macOS app attributes
         run: xattr -cr ./src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
 
