@@ -89,4 +89,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: macos-app
-          path: src-tauri/target/release/bundle/macos/TeamFlow.app
+          path: /Users/runner/work/TeamFlow/TeamFlow/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
