@@ -42,6 +42,7 @@
 	},
 	"plugins": {
 		"updater": {
+			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDk1MUI1OThFNEJFM0U1RDUKUldUVjVlTkxqbGtibGMrT0hUOEkvdzVDNDBWd1J4RElMTk9SS2ZXR0NjbGhxWW4wempKN3pjSkoK",
 			"endpoints": [
 				"https://github.com/armadacore/TeamFlow/releases/latest/download/latest.json"
 			]
