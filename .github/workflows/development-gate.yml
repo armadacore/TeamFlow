@@ -78,31 +78,31 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci --force
 
-#      - name: Import Apple Certificate
-#        env:
-#          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-#          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-#          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-#        run: |
-#          # Entpacke die Base64-kodierte Zertifikat-Datei
-#          echo "$APPLE_CERTIFICATE" | base64 --decode > apple_certificate.p12
-#
-#          # Importiere das Zertifikat in den macOS-Schlüsselbund
-#          security create-keychain -p "" build.keychain
-#          security import apple_certificate.p12 -k build.keychain -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
-#
-#          # Setze den temporären Schlüsselbund als Standard
-#          security list-keychains -d user -s build.keychain login.keychain
-#          security default-keychain -s build.keychain
-#
-#          # Entsperre den Schlüsselbund
-#          security unlock-keychain -p ""
-#
-#          # Berechtigungen für den Schlüsselbund setzen
-#          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
-#
-#      - name: Validate Imported Certificate
-#        run: security find-identity -v -p codesigning
+      - name: Import Apple Certificate
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          # Entpacke die Base64-kodierte Zertifikat-Datei
+          echo "$APPLE_CERTIFICATE" | base64 --decode > apple_certificate.p12
+
+          # Importiere das Zertifikat in den macOS-Schlüsselbund
+          security create-keychain -p "" build.keychain
+          security import apple_certificate.p12 -k build.keychain -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+
+          # Setze den temporären Schlüsselbund als Standard
+          security list-keychains -d user -s build.keychain login.keychain
+          security default-keychain -s build.keychain
+
+          # Entsperre den Schlüsselbund
+          security unlock-keychain -p ""
+
+          # Berechtigungen für den Schlüsselbund setzen
+          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
+
+      - name: Validate Imported Certificate
+        run: security find-identity -v -p codesigning
 
       - name: Build Tauri app
         env:
@@ -112,11 +112,11 @@ jobs:
           TAURI_SIGNING_IDENTITY: "Apple Development: Marcel Armada-Castellon ($APPLE_TEAM_ID)"
         run: npm run tauri build -- --target aarch64-apple-darwin
 
-      - name: Compress TeamFlow.app
-        run: zip -r TeamFlow-app.zip ./src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
+#      - name: Compress TeamFlow.app
+#        run: zip -r TeamFlow-app.zip ./src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
 
       - name: Upload .app as artifact
         uses: actions/upload-artifact@v3
         with:
           name: TeamFlow-macos-app
-          path: TeamFlow-app.zip
+          path: /Users/runner/work/TeamFlow/TeamFlow/src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/TeamFlow_0.1.0_aarch64.dmg
