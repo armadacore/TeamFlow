@@ -64,6 +64,7 @@ jobs:
       APPLE_ID: ${{secrets.APPLE_ID}}
       APPLE_PASSWORD: ${{secrets.APPLE_PASSWORD}}
       APPLE_TEAM_ID: ${{secrets.APPLE_TEAM_ID}}
+      KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -91,7 +92,6 @@ jobs:
         env:
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-          KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
         run: |
           echo $APPLE_CERTIFICATE | base64 --decode > certificate.p12
           security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
