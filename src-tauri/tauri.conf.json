@@ -35,7 +35,7 @@
 		"macOS": {
 			"frameworks": [],
 			"exceptionDomain": "",
-			"signingIdentity": "Apple Distribution: Marcel Armada-Castsellon (5G67B2Y43N)",
+			"signingIdentity": null,
 			"providerShortName": null,
 			"entitlements": null
 		}
