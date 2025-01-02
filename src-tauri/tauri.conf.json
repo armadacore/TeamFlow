@@ -33,8 +33,11 @@
 			"icons/icon.ico"
 		],
 		"macOS": {
+			"frameworks": [],
+			"exceptionDomain": "",
 			"signingIdentity": "-",
-			"hardenedRuntime": false
+			"providerShortName": null,
+			"entitlements": null
 		}
 	},
 	"plugins": {
