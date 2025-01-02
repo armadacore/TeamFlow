@@ -54,6 +54,11 @@ jobs:
         run: npm run test
 
   debugging:
+    strategy:
+      matrix:
+        include:
+          - args: '--target aarch64-apple-darwin'
+            arch: 'silicon'
     runs-on: macos-latest
     steps:
       - name: Checkout code
@@ -78,60 +83,30 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci --force
 
-      - name: Import Apple Certificate
+      - name: Import Apple Developer Certificate
         env:
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
         run: |
-          # Entpacke die Base64-kodierte Zertifikat-Datei
-          echo "$APPLE_CERTIFICATE" | base64 --decode > apple_certificate.p12
-
-          # Importiere das Zertifikat in den macOS-Schlüsselbund
-          security create-keychain -p "" build.keychain
-          security import apple_certificate.p12 -k build.keychain -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
-
-          # Setze den temporären Schlüsselbund als Standard
-          security list-keychains -d user -s build.keychain login.keychain
+          echo $APPLE_CERTIFICATE | base64 --decode > certificate.p12
+          security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
           security default-keychain -s build.keychain
-
-          # Entsperre den Schlüsselbund
-          security unlock-keychain -p ""
-
-          # Berechtigungen für den Schlüsselbund setzen
-          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
-
-      - name: Validate Imported Certificate
-        run: security find-identity -v -p codesigning
-
-      - name: Build Tauri app
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security import certificate.p12 -k build.keychain -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" build.keychain
+          security find-identity -v -p codesigning build.keychain
+      - name: Verify Certificate
+        run: |
+          CERT_INFO=$(security find-identity -v -p codesigning build.keychain | grep "Apple Development")
+          CERT_ID=$(echo "$CERT_INFO" | awk -F'"' '{print $2}')
+          echo "CERT_ID=$CERT_ID" >> $GITHUB_ENV
+          echo "Certificate imported."
+      - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-          TAURI_SIGNING_IDENTITY: "Apple Distribution: Marcel Armada-Castellon ($APPLE_TEAM_ID)"
-        run: npm run tauri build -- --target aarch64-apple-darwin
-
-#      - name: Release tauri.app
-#        uses: tauri-apps/tauri-action@v0
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-#          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-##          TAURI_SIGNING_IDENTITY: "Apple Development: Marcel Armada-Castellon ($APPLE_TEAM_ID)"
-#        with:
-#          tagName: v__VERSION__
-#          releaseName: 'v__VERSION__'
-#          releaseBody: 'See the assets to download this version and install.'
-#          releaseDraft: false
-#          prerelease: false
-#          args: ${{ matrix.args }}
-
-      - name: Compress TeamFlow.app
-        run: zip -r TeamFlow-app.zip ./src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
-
-      - name: Upload .app as artifact
-        uses: actions/upload-artifact@v3
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ env.CERT_ID }}
         with:
-          name: TeamFlow-macos-app
-          path: /Users/runner/work/TeamFlow/TeamFlow/src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/TeamFlow_0.1.0_aarch64.dmg
+          args: ${{ matrix.args }}
