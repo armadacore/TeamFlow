@@ -65,44 +65,44 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+#        with:
+#          workspaces: './src-tauri -> target'
+
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: 'aarch64-apple-darwin'
-
-      - name: Rust cache
-        uses: swatinem/rust-cache@v2
-        with:
-          workspaces: './src-tauri -> target'
+          targets: 'aarch64-apple-darwin,x86_64-apple-darwin'
 
       - name: Install frontend dependencies
         run: npm ci --force
 
-      - name: Import Apple Certificate
-        env:
-          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-        run: |
-          # Entpacke die Base64-kodierte Zertifikat-Datei
-          echo "$APPLE_CERTIFICATE" | base64 --decode > apple_certificate.p12
-
-          # Importiere das Zertifikat in den macOS-Schlüsselbund
-          security create-keychain -p "" build.keychain
-          security import apple_certificate.p12 -k build.keychain -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
-
-          # Setze den temporären Schlüsselbund als Standard
-          security list-keychains -d user -s build.keychain login.keychain
-          security default-keychain -s build.keychain
-
-          # Entsperre den Schlüsselbund
-          security unlock-keychain -p ""
-
-          # Berechtigungen für den Schlüsselbund setzen
-          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
-
-      - name: Validate Imported Certificate
-        run: security find-identity -v -p codesigning
+#      - name: Import Apple Certificate
+#        env:
+#          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+#          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+#          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+#        run: |
+#          # Entpacke die Base64-kodierte Zertifikat-Datei
+#          echo "$APPLE_CERTIFICATE" | base64 --decode > apple_certificate.p12
+#
+#          # Importiere das Zertifikat in den macOS-Schlüsselbund
+#          security create-keychain -p "" build.keychain
+#          security import apple_certificate.p12 -k build.keychain -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+#
+#          # Setze den temporären Schlüsselbund als Standard
+#          security list-keychains -d user -s build.keychain login.keychain
+#          security default-keychain -s build.keychain
+#
+#          # Entsperre den Schlüsselbund
+#          security unlock-keychain -p ""
+#
+#          # Berechtigungen für den Schlüsselbund setzen
+#          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
+#
+#      - name: Validate Imported Certificate
+#        run: security find-identity -v -p codesigning
 
 #      - name: Build Tauri app
 #        env:
@@ -118,7 +118,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-          TAURI_SIGNING_IDENTITY: "Apple Development: Marcel Armada-Castellon ($APPLE_TEAM_ID)"
+#          TAURI_SIGNING_IDENTITY: "Apple Development: Marcel Armada-Castellon ($APPLE_TEAM_ID)"
         with:
           tagName: v__VERSION__
           releaseName: 'v__VERSION__'
