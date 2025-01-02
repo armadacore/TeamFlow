@@ -92,13 +92,8 @@ jobs:
           echo "${{ secrets.APPLE_API_KEY_PATH_DATA }}" > "${{ secrets.APPLE_API_KEY_PATH_FILENAME }}"
           echo "APPLE_API_KEY_PATH=${{ secrets.APPLE_API_KEY_PATH_FILENAME }}" >> $GITHUB_ENV
 
-      # Überprüfen, ob die Datei korrekt erstellt wurde (optional)
-      - name: Verify Apple API Key File
-        run: |
-          echo "API Key File exists:"
-          ls -la "${{ secrets.APPLE_API_KEY_PATH_FILENAME }}"
-          file "${{ secrets.APPLE_API_KEY_PATH_FILENAME }}"
-        shell: bash
+      - name: Inspect File Content (Debugging)
+        run: cat ${{ secrets.APPLE_API_KEY_PATH_FILENAME }}
 
       - name: Import Apple Developer Certificate
         env:
