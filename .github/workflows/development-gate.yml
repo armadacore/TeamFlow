@@ -61,9 +61,8 @@ jobs:
             arch: 'silicon'
     runs-on: macos-latest
     env:
-      APPLE_API_ISSUER: ${{secrets.APPLE_API_ISSUER}}
-      APPLE_API_KEY: ${{secrets.APPLE_API_KEY}}
-      APPLE_API_KEY_PATH: 'AuthKey_3VA3BNFZ4M.p8'
+      APPLE_ID: ${{secrets.APPLE_ID}}
+      APPLE_PASSWORD: ${{secrets.APPLE_PASSWORD}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -86,10 +85,6 @@ jobs:
 
       - name: Install frontend dependencies
         run: npm ci --force
-
-      - name: Create Apple API Key File
-        run: |
-          echo "${{ secrets.APPLE_API_KEY_PATH_DATA }}" > AuthKey_3VA3BNFZ4M.p8
 
       - name: Import Apple Developer Certificate
         env:
