@@ -60,6 +60,10 @@ jobs:
           - args: '--target aarch64-apple-darwin'
             arch: 'silicon'
     runs-on: macos-latest
+    env:
+      APPLE_ID: ${{secrets.APPLE_ID}}
+      APPLE_PASSWORD: ${{secrets.APPLE_PASSWORD}}
+      APPLE_TEAM_ID: ${{secrets.APPLE_TEAM_ID}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
