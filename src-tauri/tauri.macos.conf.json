@@ -8,7 +8,7 @@
 			"entitlements": null,
 			"minimumSystemVersion": "12.0",
 			"dmg": {
-				"background": "./dmg-background.png",
+				"background": "./assets/dmg-background.png",
 				"windowSize": {
 					"height": 440,
 					"width": 660
