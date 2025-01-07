@@ -26,8 +26,8 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.17.0",
-		"@tauri-apps/cli": "2.1.0",
-		"@types/react": "^19.0.2",
+		"@tauri-apps/cli": "2.2.2",
+		"@types/react": "^19.0.3",
 		"@types/react-dom": "^19.0.2",
 		"@vitejs/plugin-react": "^4.3.4",
 		"@vitest/coverage-istanbul": "^2.1.8",
@@ -42,7 +42,7 @@
 		"jsdom": "^25.0.1",
 		"prettier": "^3.4.2",
 		"typescript": "^5.7.2",
-		"typescript-eslint": "^8.19.0",
+		"typescript-eslint": "^8.19.1",
 		"vite": "^6.0.7",
 		"vite-tsconfig-paths": "^5.1.4",
 		"vitest": "^2.1.8"
