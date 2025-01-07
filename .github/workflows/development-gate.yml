@@ -62,11 +62,11 @@ jobs:
             args: '--target aarch64-apple-darwin'
             arch: 'silicon'
     runs-on: ${{ matrix.platform }}
-#    env:
-#      APPLE_ID: ${{secrets.APPLE_ID}}
-#      APPLE_PASSWORD: ${{secrets.APPLE_PASSWORD}}
-#      APPLE_TEAM_ID: ${{secrets.APPLE_TEAM_ID}}
-#      APPLE_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
+    env:
+      APPLE_ID: ${{secrets.APPLE_ID}}
+      APPLE_PASSWORD: ${{secrets.APPLE_PASSWORD}}
+      APPLE_TEAM_ID: ${{secrets.APPLE_TEAM_ID}}
+      APPLE_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
     steps:
       - name: Install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-24.04'
@@ -96,25 +96,25 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci --force
 
-#      - name: Import Apple Developer Certificate
-#        env:
-#          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-#          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-#        run: |
-#          echo $APPLE_CERTIFICATE | base64 --decode > certificate.p12
-#          security create-keychain -p "APPLE_KEYCHAIN_PASSWORD" build.keychain
-#          security default-keychain -s build.keychain
-#          security unlock-keychain -p "APPLE_KEYCHAIN_PASSWORD" build.keychain
-#          security import certificate.p12 -k build.keychain -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
-#          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "APPLE_KEYCHAIN_PASSWORD" build.keychain
-#          security find-identity -v -p codesigning build.keychain
-#
-#      - name: Verify Certificate
-#        run: |
-#          CERT_INFO=$(security find-identity -v -p codesigning build.keychain | grep "Developer ID Application")
-#          CERT_ID=$(echo "$CERT_INFO" | awk -F'"' '{print $2}')
-#          echo "CERT_ID=$CERT_ID" >> $GITHUB_ENV
-#          echo "Certificate imported."
+      - name: Import Apple Developer Certificate
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+        run: |
+          echo $APPLE_CERTIFICATE | base64 --decode > certificate.p12
+          security create-keychain -p "APPLE_KEYCHAIN_PASSWORD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "APPLE_KEYCHAIN_PASSWORD" build.keychain
+          security import certificate.p12 -k build.keychain -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "APPLE_KEYCHAIN_PASSWORD" build.keychain
+          security find-identity -v -p codesigning build.keychain
+
+      - name: Verify Certificate
+        run: |
+          CERT_INFO=$(security find-identity -v -p codesigning build.keychain | grep "Developer ID Application")
+          CERT_ID=$(echo "$CERT_INFO" | awk -F'"' '{print $2}')
+          echo "CERT_ID=$CERT_ID" >> $GITHUB_ENV
+          echo "Certificate imported."
 
       - name: Release draft
         uses: tauri-apps/tauri-action@v0
@@ -122,9 +122,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-#          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-#          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-#          APPLE_SIGNING_IDENTITY: ${{ env.CERT_ID }}
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ env.CERT_ID }}
         with:
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
           releaseName: 'App v__VERSION__'

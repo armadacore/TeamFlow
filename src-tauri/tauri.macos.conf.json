@@ -6,14 +6,7 @@
 			"signingIdentity": null,
 			"providerShortName": null,
 			"entitlements": null,
-			"minimumSystemVersion": "12.0",
-			"dmg": {
-				"background": "./assets/dmg-background.png",
-				"windowSize": {
-					"height": 440,
-					"width": 660
-				}
-			}
+			"minimumSystemVersion": "12.0"
 		}
 	}
 }
