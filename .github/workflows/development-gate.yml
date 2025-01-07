@@ -55,17 +55,28 @@ jobs:
 
   debugging:
     strategy:
+      fail-fast: false
       matrix:
         include:
-          - args: '--target aarch64-apple-darwin'
-            arch: 'silicon'
-    runs-on: macos-latest
+          - platform: 'macos-latest'
+            args: '--target aarch64-apple-darwin'
+#          - platform: 'ubuntu-24.04'
+#            args: ''
+#          - platform: 'windows-latest'
+#            args: ''
+    runs-on: ${{ matrix.platform }}
     env:
       APPLE_ID: ${{secrets.APPLE_ID}}
       APPLE_PASSWORD: ${{secrets.APPLE_PASSWORD}}
       APPLE_TEAM_ID: ${{secrets.APPLE_TEAM_ID}}
       APPLE_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
     steps:
+      - name: Install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-24.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -75,42 +86,18 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
           workspaces: './src-tauri -> target'
 
-      - name: Install Rust stable
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: 'aarch64-apple-darwin,x86_64-apple-darwin'
-
       - name: Install frontend dependencies
         run: npm ci --force
-
-#      - name: Build Tauri app
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-#          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-#        run: npm run tauri build -- --target aarch64-apple-darwin
-
-#      - name: Notarize Release Build
-#        uses: lando/notarize-action@v2
-#        with:
-#          product-path: ./src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
-#          appstore-connect-username: ${{secrets.APPLE_ID}}
-#          appstore-connect-password: ${{secrets.APPLE_PASSWORD}}
-#          appstore-connect-team-id: ${{secrets.APPLE_TEAM_ID}}
-#
-#      - name: Compress TeamFlow.app
-#        run: zip -r TeamFlow-app.zip ./src-tauri/target/aarch64-apple-darwin/release/bundle/macos/TeamFlow.app
-#
-#      - name: Upload .app as artifact
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: TeamFlow-macos-app
-#          path: TeamFlow-app.zip
 
       - name: Import Apple Developer Certificate
         env:
@@ -132,7 +119,7 @@ jobs:
           echo "CERT_ID=$CERT_ID" >> $GITHUB_ENV
           echo "Certificate imported."
 
-      - name: Release draft
+      - name: Release app
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -142,8 +129,8 @@ jobs:
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           APPLE_SIGNING_IDENTITY: ${{ env.CERT_ID }}
         with:
-          tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
-          releaseName: 'App v__VERSION__'
+          tagName: v__VERSION__
+          releaseName: 'v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
           prerelease: false
