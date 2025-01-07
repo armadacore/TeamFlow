@@ -55,6 +55,7 @@ jobs:
 
   debugging:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - platform: 'macos-latest'
