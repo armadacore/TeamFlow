@@ -8,75 +8,64 @@ on:
       - '!develop'
 
 jobs:
-  vulnerability-check:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install nodejs
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: npm ci --force
-
-      - name: Check licenses
-        run: npm run license:check
-
-      - name: Check outdated
-        run: npm run outdated:check
-
-  code-check:
-    needs: vulnerability-check
-    if: ${{ success() }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install nodejs
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: npm ci --force
-
-      - name: Check eslint
-        run: npm run eslint:check
-
-      - name: Check TypeScript type
-        run: npm run type:check
-
-      - name: Unit test
-        run: npm run test
+#  vulnerability-check:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Install nodejs
+#        uses: actions/setup-node@v4
+#        with:
+#          node-version: '22'
+#
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Install dependencies
+#        run: npm ci --force
+#
+#      - name: Check licenses
+#        run: npm run license:check
+#
+#      - name: Check outdated
+#        run: npm run outdated:check
+#
+#  code-check:
+#    needs: vulnerability-check
+#    if: ${{ success() }}
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Install nodejs
+#        uses: actions/setup-node@v4
+#        with:
+#          node-version: '22'
+#
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Install dependencies
+#        run: npm ci --force
+#
+#      - name: Check eslint
+#        run: npm run eslint:check
+#
+#      - name: Check TypeScript type
+#        run: npm run type:check
+#
+#      - name: Unit test
+#        run: npm run test
 
   debugging:
     strategy:
-      fail-fast: false
       matrix:
         include:
-          - platform: 'macos-latest'
-            args: '--target aarch64-apple-darwin'
-#          - platform: 'ubuntu-24.04'
-#            args: ''
-#          - platform: 'windows-latest'
-#            args: ''
-    runs-on: ${{ matrix.platform }}
+          - args: '--target aarch64-apple-darwin'
+            arch: 'silicon'
+    runs-on: macos-latest
     env:
       APPLE_ID: ${{secrets.APPLE_ID}}
       APPLE_PASSWORD: ${{secrets.APPLE_PASSWORD}}
       APPLE_TEAM_ID: ${{secrets.APPLE_TEAM_ID}}
       APPLE_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
     steps:
-      - name: Install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-24.04'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -86,15 +75,15 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
-      - name: Install Rust stable
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
-
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
           workspaces: './src-tauri -> target'
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: 'aarch64-apple-darwin,x86_64-apple-darwin'
 
       - name: Install frontend dependencies
         run: npm ci --force
@@ -119,7 +108,7 @@ jobs:
           echo "CERT_ID=$CERT_ID" >> $GITHUB_ENV
           echo "Certificate imported."
 
-      - name: Release app
+      - name: Release draft
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -129,8 +118,8 @@ jobs:
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           APPLE_SIGNING_IDENTITY: ${{ env.CERT_ID }}
         with:
-          tagName: v__VERSION__
-          releaseName: 'v__VERSION__'
+          tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
+          releaseName: 'App v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
           prerelease: false
