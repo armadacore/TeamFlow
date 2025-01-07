@@ -57,9 +57,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - args: '--target aarch64-apple-darwin'
+          - platform: 'macos-latest'
+            args: '--target aarch64-apple-darwin'
             arch: 'silicon'
-    runs-on: macos-latest
+    runs-on: ${{ matrix.platform }}
     env:
       APPLE_ID: ${{secrets.APPLE_ID}}
       APPLE_PASSWORD: ${{secrets.APPLE_PASSWORD}}
