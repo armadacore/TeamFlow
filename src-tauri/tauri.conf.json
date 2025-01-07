@@ -25,6 +25,9 @@
 		"createUpdaterArtifacts": true,
 		"active": true,
 		"targets": [
+			"dep",
+			"rpm",
+			"msi",
 			"dmg"
 		],
 		"icon": [
