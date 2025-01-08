@@ -24,26 +24,23 @@
 	"bundle": {
 		"createUpdaterArtifacts": true,
 		"active": true,
-		"targets": "all",
+		"targets": [
+			"deb",
+			"msi",
+			"dmg",
+			"app"
+		],
 		"icon": [
 			"icons/32x32.png",
 			"icons/128x128.png",
 			"icons/128x128@2x.png",
 			"icons/icon.icns",
 			"icons/icon.ico"
-		],
-		"macOS": {
-			"entitlements": null,
-			"exceptionDomain": null,
-			"frameworks": [],
-			"minimumSystemVersion": null,
-			"signingIdentity": null,
-			"entitlementsFile": null
-		}
+		]
 	},
 	"plugins": {
 		"updater": {
-			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDk1MUI1OThFNEJFM0U1RDUKUldUVjVlTkxqbGtibGMrT0hUOEkvdzVDNDBWd1J4RElMTk9SS2ZXR0NjbGhxWW4wempKN3pjSkoK",
+			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDg2QzFERjhCNUM2RDFENDMKUldSREhXMWNpOS9CaHNMVTFaaktacjNQdUVLQ2tIaGFtN1hFV08vU3RSdEZlNzR5dHNSVFhQUzcK",
 			"endpoints": [
 				"https://github.com/armadacore/TeamFlow/releases/latest/download/latest.json"
 			]

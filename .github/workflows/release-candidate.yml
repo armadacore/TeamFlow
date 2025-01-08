@@ -28,21 +28,21 @@ jobs:
         run: npm run outdated:check
 
       - name: Get version from package.json
-        if: ${{ github.event.pull_request.base.ref == 'develop'}}
+        if: ${{ github.event.pull_request.base.ref == 'master'}}
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.3.1
 
       - name: Check tag
-        if: ${{ github.event.pull_request.base.ref == 'develop'}}
+        if: ${{ github.event.pull_request.base.ref == 'master'}}
         uses: mukunku/tag-exists-action@v1.6.0
         id: check-tag
         with:
           tag: v${{ steps.package-version.outputs.current-version}}
 
       - name: Tag exists
-        if: ${{ github.event.pull_request.base.ref == 'develop' && steps.check-tag.outputs.exists == 'true' }}
+        if: ${{ github.event.pull_request.base.ref == 'master' && steps.check-tag.outputs.exists == 'true' }}
         run: |
-          echo "Please update version in package.json"
+          echo "::error::Please update version in package.json. Release version v${{ steps.package-version.outputs.current-version}} still exists"
           exit 1
 
   code-check:
