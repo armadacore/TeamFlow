@@ -26,11 +26,6 @@ jobs:
       APPLE_TEAM_ID: ${{secrets.APPLE_TEAM_ID}}
       APPLE_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
     steps:
-      - name: Provoke failure on Windows
-        if: matrix.platform == 'windows-latest'
-        run: |
-          echo "Provoke failure on Windows"
-          exit 1
       - name: Install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
         run: |
@@ -58,6 +53,12 @@ jobs:
 
       - name: Install frontend dependencies
         run: npm ci --force
+
+      - name: Provoke failure on Windows
+        if: matrix.platform == 'windows-latest'
+        run: |
+          echo "Provoke failure on Windows"
+          exit 1
 
       - name: Import Apple Developer Certificate
         if: matrix.platform == 'ubuntu-24.04'
