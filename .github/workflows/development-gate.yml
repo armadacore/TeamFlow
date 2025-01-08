@@ -32,7 +32,8 @@ jobs:
           tag: v${{ steps.package-version.outputs.current-version}}
 
       - name: Tag exists
-        if: ${{ github.event.pull_request.base.ref == 'develop' && steps.check-tag.outputs.exists == 'true' }}
+        if: ${{ steps.check-tag.outputs.exists == 'true' }}
+#        if: ${{ github.event.pull_request.base.ref == 'develop' && steps.check-tag.outputs.exists == 'true' }}
         run: |
           echo "Please update version in package.json"
           exit 1
