@@ -18,12 +18,12 @@ jobs:
             args: ''
           - platform: 'windows-latest'
             args: ''
-      runs-on: ${{ matrix.platform }}
       env:
         APPLE_ID: ${{secrets.APPLE_ID}}
         APPLE_PASSWORD: ${{secrets.APPLE_PASSWORD}}
         APPLE_TEAM_ID: ${{secrets.APPLE_TEAM_ID}}
         APPLE_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
+      runs-on: ${{ matrix.platform }}
       steps:
         - name: Install dependencies (ubuntu only)
           if: matrix.platform == 'ubuntu-22.04'
