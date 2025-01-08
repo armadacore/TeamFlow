@@ -10,15 +10,15 @@ on:
 jobs:
   debuggin:
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         include:
 #          - platform: 'macos-latest'
 #            args: '--target aarch64-apple-darwin'
           - platform: 'ubuntu-22.04'
             args: ''
-#          - platform: 'windows-latest'
-#            args: ''
+          - platform: 'windows-latest'
+            args: ''
     runs-on: ${{ matrix.platform }}
     env:
       APPLE_ID: ${{secrets.APPLE_ID}}
@@ -26,21 +26,16 @@ jobs:
       APPLE_TEAM_ID: ${{secrets.APPLE_TEAM_ID}}
       APPLE_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
     steps:
+      - name: Provoke failure on Windows
+        if: matrix.platform == 'windows-latest'
+        run: |
+          echo "Provoke failure on Windows"
+          exit 1
       - name: Install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-
-#      - name: Set PKG_CONFIG_PATH
-#        if: matrix.platform == 'ubuntu-24.04'
-#        run: echo "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig" >> $GITHUB_ENV
-#
-#      - name: Debug PKG-CONFIG
-#        if: matrix.platform == 'ubuntu-24.04'
-#        run: |
-#          echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH"
-#          pkg-config --libs gdk-3.0 || echo "GDK-3.0 not found"
 
       - name: Checkout code
         uses: actions/checkout@v4
