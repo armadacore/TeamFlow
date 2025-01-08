@@ -19,67 +19,37 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Get version from package.json
-#        if: ${{ github.event.pull_request.base.ref == 'develop'}}
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@v1.3.1
+      - name: Install dependencies
+        run: npm ci --force
 
-      - name: Check tag
-#        if: ${{ github.event.pull_request.base.ref == 'develop'}}
-        uses: mukunku/tag-exists-action@v1.6.0
-        id: check-tag
+      - name: Check licenses
+        run: npm run license:check
+
+      - name: Check outdated
+        run: npm run outdated:check
+
+  code-check:
+    needs: vulnerability-check
+    if: ${{ success() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install nodejs
+        uses: actions/setup-node@v4
         with:
-          tag: v${{ steps.package-version.outputs.current-version}}
+          node-version: '22'
 
-      - name: Tag exists
-        if: ${{ steps.check-tag.outputs.exists == 'true' }}
-#        if: ${{ github.event.pull_request.base.ref == 'develop' && steps.check-tag.outputs.exists == 'true' }}
-        run: |
-          echo "::error::Please update version in package.json. Version v${{ steps.package-version.outputs.current-version}} still exists"
-          exit 1
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-#  vulnerability-check:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Install nodejs
-#        uses: actions/setup-node@v4
-#        with:
-#          node-version: '22'
-#
-#      - name: Checkout code
-#        uses: actions/checkout@v4
-#
-#      - name: Install dependencies
-#        run: npm ci --force
-#
-#      - name: Check licenses
-#        run: npm run license:check
-#
-#      - name: Check outdated
-#        run: npm run outdated:check
-#
-#  code-check:
-#    needs: vulnerability-check
-#    if: ${{ success() }}
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Install nodejs
-#        uses: actions/setup-node@v4
-#        with:
-#          node-version: '22'
-#
-#      - name: Checkout code
-#        uses: actions/checkout@v4
-#
-#      - name: Install dependencies
-#        run: npm ci --force
-#
-#      - name: Check eslint
-#        run: npm run eslint:check
-#
-#      - name: Check TypeScript type
-#        run: npm run type:check
-#
-#      - name: Unit test
-#        run: npm run test
+      - name: Install dependencies
+        run: npm ci --force
+
+      - name: Check eslint
+        run: npm run eslint:check
+
+      - name: Check TypeScript type
+        run: npm run type:check
+
+      - name: Unit test
+        run: npm run test
 
