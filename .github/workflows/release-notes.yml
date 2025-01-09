@@ -14,8 +14,11 @@ jobs:
   collect-notes:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Get latest tag
-        uses: 32teeth/action-github-tag@v1
+        uses: actions-ecosystem/action-get-latest-tag@v1
         id: get-latest-tag
 
       - name: Build Changelog
