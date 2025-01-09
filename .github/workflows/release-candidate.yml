@@ -91,6 +91,17 @@ jobs:
           files: ./.tests/coverage/lcov.info
           slug: armadacore/TeamFlow
           fail_ci_if_error: true
+
+  prepare-pre-build:
+    needs: code-check
+    if: ${{ success() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove drafts
+        uses: hugo19941994/delete-draft-releases@1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   pre-build:
     needs: code-check
     if: ${{ success() && github.event.pull_request.base.ref == 'master'}}
