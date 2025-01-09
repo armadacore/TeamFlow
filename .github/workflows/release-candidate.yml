@@ -173,10 +173,12 @@ jobs:
           echo "Certificate imported."
 
       - name: Get latest tag
+        if: matrix.platform == 'ubuntu-22.04'
         uses: actions-ecosystem/action-get-latest-tag@v1
         id: get-latest-tag
 
       - name: Build Changelog
+        if: matrix.platform == 'ubuntu-22.04'
         id: release-notes
         uses: mikepenz/release-changelog-builder-action@v5
         env:
@@ -198,7 +200,7 @@ jobs:
         with:
           tagName: v__VERSION__
           releaseName: v__VERSION__
-          releaseBody: ${{ steps.release-notes.outputs.changelog }}
+          releaseBody: ${{ matrix.platform == 'ubuntu-22.04' && steps.release-notes.outputs.changelog || '' }}
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
