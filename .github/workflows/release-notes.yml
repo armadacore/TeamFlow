@@ -20,10 +20,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           failOnError: true
-          fromTag: v0.1.0
+#          fromTag: v0.1.0
           toTag: v0.1.1
           configuration: release-notes.config.json
 
       - name: Output notes
         run: |
-          echo "${{ steps.release-notes.outputs.changelog }}<details><summary>Uncategorized</summary>${{ steps.release-notes.outputs.uncategorized_prs }}</details>"
+          echo "${{ steps.release-notes.outputs.changelog }}"
