@@ -86,6 +86,69 @@ jobs:
           echo "CERT_ID=$CERT_ID" >> $GITHUB_ENV
           echo "Certificate imported."
 
+      - name: Get latest tag
+        uses: actions-ecosystem/action-get-latest-tag@v1
+        id: get-latest-tag
+
+      - name: Build Changelog
+        id: release-notes
+        uses: mikepenz/release-changelog-builder-action@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          failOnError: true
+          fromTag: ${{ steps.get-latest-tag.outputs.tag }}
+          configurationJson: |
+            {
+            "categories": [
+              {
+                "key": "features",
+                "title": "## 🚀 Features",
+                "labels": ["feature", "feat"]
+              },
+              {
+                "key": "fixes",
+                "title": "## 🐛 Fixes",
+                "labels": ["fix", "bug"]
+              },
+              {
+                "key": "tests",
+                "title": "## 🧪 Tests",
+                "labels": ["test"]
+              },
+              {
+                "key": "documentations",
+                "title": "## 📚 Documentations",
+                "labels": ["documentation", "doc"]
+              },
+              {
+                "key": "chore",
+                "title": "## ⚙️ Chore",
+                "labels": ["chore"]
+              },
+              {
+                "key": "cicd",
+                "title": "## 📦 CICD",
+                "labels": ["cicd", "ci"]
+              }
+            ],
+              "ignore_labels": [
+                "ignore",
+                "release"
+              ],
+              "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
+              "pr_template": "- #{{TITLE}}\n   - PR: ##{{NUMBER}}",
+              "max_tags_to_fetch": 200,
+              "max_pull_requests": 200,
+              "max_back_track_time_days": 365,
+              "exclude_merge_branches": [
+                "Owner/qa"
+              ],
+              "base_branches": [
+                "develop"
+              ]
+            }
+
       - name: Publish release
         uses: tauri-apps/tauri-action@v0
         env:
@@ -98,6 +161,7 @@ jobs:
         with:
           tagName: v__VERSION__
           releaseName: v__VERSION__
+          releaseBody: ${{ steps.release-notes.outputs.changelog }}
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}

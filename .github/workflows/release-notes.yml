@@ -1,6 +1,7 @@
 name: Release notes
 
 on:
+#  workflow_dispatch:
   push:
     branches:
       - '**'
@@ -13,6 +14,10 @@ jobs:
   collect-notes:
     runs-on: ubuntu-latest
     steps:
+      - name: Get latest tag
+        uses: actions-ecosystem/action-get-latest-tag@v1
+        id: get-latest-tag
+
       - name: Build Changelog
         id: release-notes
         uses: mikepenz/release-changelog-builder-action@v5
@@ -20,8 +25,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           failOnError: true
-          fromTag: v0.1.0
-#          toTag: v0.1.1
+          fromTag: ${{ steps.get-latest-tag.outputs.tag }}
           configurationJson: |
             {
             "categories": [
