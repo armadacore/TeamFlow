@@ -20,8 +20,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           failOnError: true
-#          fromTag: v0.1.0
-          toTag: v0.1.1
+          fromTag: v0.1.0
+#          toTag: v0.1.1
           configuration: release-notes.config.json
 
       - name: Output notes
