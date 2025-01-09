@@ -32,7 +32,7 @@ jobs:
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.3.1
 
-      - name: Check tag
+      - name: Get latest tag
         if: ${{ github.event.pull_request.base.ref == 'master'}}
         uses: mukunku/tag-exists-action@v1.6.0
         id: check-tag
@@ -42,7 +42,21 @@ jobs:
       - name: Tag exists
         if: ${{ github.event.pull_request.base.ref == 'master' && steps.check-tag.outputs.exists == 'true' }}
         run: |
-          echo "::error::Please update version in package.json. Release version v${{ steps.package-version.outputs.current-version}} still exists"
+          echo "::error::Please update version in package.json. Release version v${{ steps.package-version.outputs.current-version }} still exists"
+          exit 1
+
+      - name: Get version form tauri.conf.json
+        if: ${{ github.event.pull_request.base.ref == 'master'}}
+        id: tauri-version
+        uses: ActionsTools/read-json-action@main
+        with:
+          file_path: "src-tauri/tauri.conf.json"
+          prop_path: "version"
+
+      - name: Compare versions
+        if: ${{ github.event.pull_request.base.ref == 'master' && steps.package-version.outputs.current-version != steps.tauri-version.outputs.value }}
+        run: |
+          echo "::error::Please update version in tauri.conf.json. To release version v${{ steps.package-version.outputs.current-version }}"
           exit 1
 
   code-check:
@@ -159,4 +173,7 @@ jobs:
         with:
           tagName: v__VERSION__
           releaseName: v__VERSION__
+          releaseBody: 'See the assets to download this version and install.'
+          releaseDraft: true
+          prerelease: false
           args: ${{ matrix.args }}
