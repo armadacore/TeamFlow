@@ -8,7 +8,7 @@ on:
       - closed
 
 jobs:
-  prepare-publish:
+  clean-up:
     runs-on: ubuntu-latest
     steps:
       - name: Remove drafts
@@ -17,7 +17,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   do-publish:
-    needs: prepare-publish
+    needs: clean-up
     if: ${{ success() }}
     strategy:
       fail-fast: false

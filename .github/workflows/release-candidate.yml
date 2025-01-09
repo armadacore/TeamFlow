@@ -28,16 +28,16 @@ jobs:
         run: npm run outdated:check
 
       - name: Get version from package.json
-        if: ${{ github.event.pull_request.base.ref == 'master'}}
+        if: ${{ github.event.pull_request.base.ref == 'master' }}
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.3.1
 
       - name: Get latest tag
-        if: ${{ github.event.pull_request.base.ref == 'master'}}
+        if: ${{ github.event.pull_request.base.ref == 'master' }}
         uses: mukunku/tag-exists-action@v1.6.0
         id: check-tag
         with:
-          tag: v${{ steps.package-version.outputs.current-version}}
+          tag: v${{ steps.package-version.outputs.current-version }}
 
       - name: Tag exists
         if: ${{ github.event.pull_request.base.ref == 'master' && steps.check-tag.outputs.exists == 'true' }}
@@ -46,7 +46,7 @@ jobs:
           exit 1
 
       - name: Get version form tauri.conf.json
-        if: ${{ github.event.pull_request.base.ref == 'master'}}
+        if: ${{ github.event.pull_request.base.ref == 'master' }}
         id: tauri-version
         uses: ActionsTools/read-json-action@main
         with:
@@ -92,7 +92,7 @@ jobs:
           slug: armadacore/TeamFlow
           fail_ci_if_error: true
 
-  prepare-pre-build:
+  clean-up:
     needs: code-check
     if: ${{ success() }}
     runs-on: ubuntu-latest
@@ -103,7 +103,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   pre-build:
-    needs: prepare-pre-build
+    needs: clean-up
     if: ${{ success() && github.event.pull_request.base.ref == 'master'}}
     strategy:
       fail-fast: false
