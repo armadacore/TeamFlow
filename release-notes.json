@@ -27,7 +27,7 @@
 		},
 		{
 			"key": "cicd",
-			"title": "## 📦🔋 CICD",
+			"title": "## 📦 CICD",
 			"labels": ["cicd", "ci"]
 		}
 	],
