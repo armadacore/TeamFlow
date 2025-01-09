@@ -78,7 +78,8 @@ jobs:
           slug: armadacore/TeamFlow
           fail_ci_if_error: true
   pre-build:
-    if: ${{ github.event.pull_request.base.ref == 'master'}}
+    needs: code-check
+    if: ${{ success() && github.event.pull_request.base.ref == 'master'}}
     strategy:
       fail-fast: false
       matrix:
