@@ -1,0 +1,12 @@
+{
+	"bundle": {
+		"macOS": {
+			"frameworks": [],
+			"exceptionDomain": "",
+			"signingIdentity": null,
+			"providerShortName": null,
+			"entitlements": null,
+			"minimumSystemVersion": "12.0"
+		}
+	}
+}

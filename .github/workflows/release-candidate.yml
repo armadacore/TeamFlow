@@ -28,21 +28,35 @@ jobs:
         run: npm run outdated:check
 
       - name: Get version from package.json
-        if: ${{ github.event.pull_request.base.ref == 'develop'}}
+        if: ${{ github.event.pull_request.base.ref == 'master'}}
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.3.1
 
-      - name: Check tag
-        if: ${{ github.event.pull_request.base.ref == 'develop'}}
+      - name: Get latest tag
+        if: ${{ github.event.pull_request.base.ref == 'master'}}
         uses: mukunku/tag-exists-action@v1.6.0
         id: check-tag
         with:
           tag: v${{ steps.package-version.outputs.current-version}}
 
       - name: Tag exists
-        if: ${{ github.event.pull_request.base.ref == 'develop' && steps.check-tag.outputs.exists == 'true' }}
+        if: ${{ github.event.pull_request.base.ref == 'master' && steps.check-tag.outputs.exists == 'true' }}
         run: |
-          echo "Please update version in package.json"
+          echo "::error::Please update version in package.json. Release version v${{ steps.package-version.outputs.current-version }} still exists"
+          exit 1
+
+      - name: Get version form tauri.conf.json
+        if: ${{ github.event.pull_request.base.ref == 'master'}}
+        id: tauri-version
+        uses: ActionsTools/read-json-action@main
+        with:
+          file_path: "src-tauri/tauri.conf.json"
+          prop_path: "version"
+
+      - name: Compare versions
+        if: ${{ github.event.pull_request.base.ref == 'master' && steps.package-version.outputs.current-version != steps.tauri-version.outputs.value }}
+        run: |
+          echo "::error::Please update version in tauri.conf.json. To release version v${{ steps.package-version.outputs.current-version }}"
           exit 1
 
   code-check:
@@ -77,3 +91,88 @@ jobs:
           files: ./.tests/coverage/lcov.info
           slug: armadacore/TeamFlow
           fail_ci_if_error: true
+  pre-build:
+    needs: code-check
+    if: ${{ success() && github.event.pull_request.base.ref == 'master'}}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'macos-latest'
+            args: '--target aarch64-apple-darwin'
+          - platform: 'ubuntu-22.04'
+            args: ''
+          - platform: 'windows-latest'
+            args: ''
+    runs-on: ${{ matrix.platform }}
+    env:
+      APPLE_ID: ${{secrets.APPLE_ID}}
+      APPLE_PASSWORD: ${{secrets.APPLE_PASSWORD}}
+      APPLE_TEAM_ID: ${{secrets.APPLE_TEAM_ID}}
+      APPLE_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
+    steps:
+      - name: Install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - name: Install frontend dependencies
+        run: npm ci --force
+
+      - name: Import Apple Developer Certificate
+        if: matrix.platform == 'macos-latest'
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+        run: |
+          echo $APPLE_CERTIFICATE | base64 --decode > certificate.p12
+          security create-keychain -p "APPLE_KEYCHAIN_PASSWORD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "APPLE_KEYCHAIN_PASSWORD" build.keychain
+          security import certificate.p12 -k build.keychain -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "APPLE_KEYCHAIN_PASSWORD" build.keychain
+          security find-identity -v -p codesigning build.keychain
+
+      - name: Verify Certificate
+        if: matrix.platform == 'macos-latest'
+        run: |
+          CERT_INFO=$(security find-identity -v -p codesigning build.keychain | grep "Developer ID Application")
+          CERT_ID=$(echo "$CERT_INFO" | awk -F'"' '{print $2}')
+          echo "CERT_ID=$CERT_ID" >> $GITHUB_ENV
+          echo "Certificate imported."
+
+      - name: Release draft
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ env.CERT_ID }}
+        with:
+          tagName: v__VERSION__
+          releaseName: v__VERSION__
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }}
