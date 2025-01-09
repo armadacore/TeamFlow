@@ -29,7 +29,7 @@ jobs:
         with:
           failOnError: true
           fromTag: ${{ steps.get-latest-tag.outputs.tag }}
-          configuration: ../release-notes.json
+          configuration: release-notes.json
 
       - name: Output notes
         run: |
