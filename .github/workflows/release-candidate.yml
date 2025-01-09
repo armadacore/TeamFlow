@@ -103,7 +103,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   pre-build:
-    needs: code-check
+    needs: prepare-pre-build
     if: ${{ success() && github.event.pull_request.base.ref == 'master'}}
     strategy:
       fail-fast: false
