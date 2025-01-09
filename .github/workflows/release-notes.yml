@@ -1,0 +1,36 @@
+name: Release notes
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - '**'
+      - '!master'
+      - '!develop'
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  collect-notes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get latest tag
+        uses: actions-ecosystem/action-get-latest-tag@v1
+        id: get-latest-tag
+
+      - name: Build Changelog
+        id: release-notes
+        uses: mikepenz/release-changelog-builder-action@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          failOnError: true
+          fromTag: ${{ steps.get-latest-tag.outputs.tag }}
+          configuration: release-notes.json
+
+      - name: Output notes
+        run: |
+          echo "${{ steps.release-notes.outputs.changelog }}"
