@@ -28,7 +28,8 @@
 			"deb",
 			"msi",
 			"dmg",
-			"app"
+			"app",
+			"appimage"
 		],
 		"icon": [
 			"icons/32x32.png",
