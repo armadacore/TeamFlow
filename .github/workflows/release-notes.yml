@@ -1,14 +1,14 @@
 name: Release notes
 
 on:
-#  workflow_dispatch:
-  push:
-    branches:
-      - '**'
-      - '!master'
-      - '!develop'
-    tags:
-      - 'v*.*.*'
+  workflow_dispatch:
+#  push:
+#    branches:
+#      - '**'
+#      - '!master'
+#      - '!develop'
+#    tags:
+#      - 'v*.*.*'
 
 jobs:
   collect-notes:
