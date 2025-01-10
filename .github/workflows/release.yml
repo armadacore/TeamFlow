@@ -107,6 +107,8 @@ jobs:
           prerelease: false
           args: ${{ matrix.args }}
   release-notes:
+    needs: release
+    if: ${{ success() }}
     runs-on: ubuntu-latest
     steps:
       # wait one minute until system has recognized new release
