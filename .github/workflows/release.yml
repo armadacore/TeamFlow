@@ -1,12 +1,12 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - develop
-#  release:
-#    types:
-#      - edited
+#  push:
+#    branches:
+#      - develop
+  release:
+    types:
+      - edited
 
 
 #  pull_request:
@@ -125,36 +125,36 @@ jobs:
 
 
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          tag_name: v${{ steps.package-version.outputs.current-version }}
-          release_name: v${{ steps.package-version.outputs.current-version }}
+#      - name: Create Release
+#        id: create_release
+#        uses: actions/create-release@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+#        with:
+#          tag_name: v${{ steps.package-version.outputs.current-version }}
+#          release_name: v${{ steps.package-version.outputs.current-version }}
 #          tag_name: v0.0.0
 #          release_name: v0.0.0
-          draft: true
-          prerelease: false
+#          draft: true
+#          prerelease: false
 
 
 
 
-#      - name: Build Changelog
-#        id: release-notes
-#        uses: mikepenz/release-changelog-builder-action@v5
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          failOnError: true
-#          configuration: release-notes.json
-#          fromTag: v0.0.0
-#          toTag: v${{ steps.package-version.outputs.current-version }}
-#
-#      - name: Notes output
-#        run: |
-#          echo "${{ steps.release-notes.outputs.changelog }}"
+      - name: Build Changelog
+        id: release-notes
+        uses: mikepenz/release-changelog-builder-action@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          failOnError: true
+          configuration: release-notes.json
+          fromTag: v0.0.0
+          toTag: v${{ steps.package-version.outputs.current-version }}
+
+      - name: Notes output
+        run: |
+          echo "${{ steps.release-notes.outputs.changelog }}"
 
 
 
