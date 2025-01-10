@@ -127,7 +127,6 @@ jobs:
           failOnError: true
           configuration: release-notes.json
           toTag: v${{ steps.package-version.outputs.current-version }}
-          owner: github-actions
 
       - name: Notes output
         run: |
