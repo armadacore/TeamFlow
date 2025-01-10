@@ -106,31 +106,31 @@ jobs:
 #          releaseDraft: false
 #          prerelease: false
 #          args: ${{ matrix.args }}
-#  release-notes:
+  release-notes:
 #    needs: release
 #    if: ${{ success() }}
-#    runs-on: ubuntu-latest
-#    steps:
-#      # wait one minute until system has recognized new release
+    runs-on: ubuntu-latest
+    steps:
+      # wait one minute until system has recognized new release
 #      - name: Wait for finished release
 #        run: sleep 60
-#
-#      - name: Checkout code
-#        uses: actions/checkout@v4
-#
-#      - name: Get version from package.json
-#        id: package-version
-#        uses: martinbeentjes/npm-get-version-action@v1.3.1
-#
-#      - name: Build Changelog
-#        id: release-notes
-#        uses: mikepenz/release-changelog-builder-action@v5
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          failOnError: true
-#          configuration: release-notes.json
-#          toTag: v${{ steps.package-version.outputs.current-version }}
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version from package.json
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+
+      - name: Build Changelog
+        id: release-notes
+        uses: mikepenz/release-changelog-builder-action@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          failOnError: true
+          configuration: release-notes.json
+          toTag: v${{ steps.package-version.outputs.current-version }}
 
       - name: Notes output
         run: |
