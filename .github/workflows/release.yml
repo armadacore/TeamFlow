@@ -118,23 +118,36 @@ jobs:
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.3.1
 
-      - name: Build Changelog
-        id: release-notes
-        uses: mikepenz/release-changelog-builder-action@v5
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          failOnError: true
-          configuration: release-notes.json
-          toTag: v${{ steps.package-version.outputs.current-version }}
+#          tag_name: v${{ steps.package-version.outputs.current-version }}
+#          release_name: v${{ steps.package-version.outputs.current-version }}
+          tag_name: v0.0.0
+          release_name: v0.0.0
+          draft: true
+          prerelease: false
 
-      - name: Notes output
-        run: |
-          echo "${{ steps.release-notes.outputs.changelog }}"
+#      - name: Build Changelog
+#        id: release-notes
+#        uses: mikepenz/release-changelog-builder-action@v5
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          failOnError: true
+#          configuration: release-notes.json
+#          toTag: v${{ steps.package-version.outputs.current-version }}
 
-      - name: Update latest release body
-        uses: mini-bomba/create-github-release@v1.1.3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: v${{ steps.package-version.outputs.current-version }}
-          body: ${{ steps.release-notes.outputs.changelog }}
+#      - name: Notes output
+#        run: |
+#          echo "${{ steps.release-notes.outputs.changelog }}"
+
+#      - name: Update latest release body
+#        uses: mini-bomba/create-github-release@v1.1.3
+#        with:
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          tag: v${{ steps.package-version.outputs.current-version }}
+#          body: ${{ steps.release-notes.outputs.changelog }}
