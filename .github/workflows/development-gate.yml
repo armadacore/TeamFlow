@@ -1,7 +1,6 @@
 name: Development gate
 
 on:
-#  workflow_dispatch:
   push:
     branches:
       - '**'
