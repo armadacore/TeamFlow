@@ -26,8 +26,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           deleteOnlyFromDrafts: false
-          tag:
-#          tag: v${{ steps.package-version.outputs.current-version }}
+          tag: v${{ steps.package-version.outputs.current-version }}
 
       - name: Build Changelog
         id: release-notes
