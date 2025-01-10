@@ -1,0 +1,49 @@
+{
+	"categories": [
+		{
+			"key": "features",
+			"title": "## 🚀 Features",
+			"labels": ["feature", "feat"]
+		},
+		{
+			"key": "fixes",
+			"title": "## 🐛 Fixes",
+			"labels": ["fix", "bug"]
+		},
+		{
+			"key": "tests",
+			"title": "## 🧪 Tests",
+			"labels": ["test"]
+		},
+		{
+			"key": "documentations",
+			"title": "## 📚 Documentations",
+			"labels": ["documentation", "doc"]
+		},
+		{
+			"key": "chore",
+			"title": "## ⚙️ Chore",
+			"labels": ["chore"]
+		},
+		{
+			"key": "cicd",
+			"title": "## 📦 CICD",
+			"labels": ["cicd", "ci"]
+		}
+	],
+	"ignore_labels": [
+		"ignore",
+		"release"
+	],
+	"template": "#{{CHANGELOG}}",
+	"pr_template": "- ##{{NUMBER}} - #{{TITLE}}",
+	"max_tags_to_fetch": 200,
+	"max_pull_requests": 200,
+	"max_back_track_time_days": 365,
+	"exclude_merge_branches": [
+		"Owner/qa"
+	],
+	"base_branches": [
+		"develop"
+	]
+}
