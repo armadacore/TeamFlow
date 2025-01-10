@@ -1,11 +1,12 @@
 name: Development gate
 
 on:
-  push:
-    branches:
-      - '**'
-      - '!master'
-      - '!develop'
+  workflow_dispatch:
+#  push:
+#    branches:
+#      - '**'
+#      - '!master'
+#      - '!develop'
 
 jobs:
   vulnerability-check:
