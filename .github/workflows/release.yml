@@ -111,6 +111,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Get version from package.json
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+
       - name: Build Changelog
         id: release-notes
         uses: mikepenz/release-changelog-builder-action@v5
@@ -119,10 +123,7 @@ jobs:
         with:
           failOnError: true
           configuration: release-notes.json
-
-      - name: Get version from package.json
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@v1.3.1
+          fromTag: v${{ steps.package-version.outputs.current-version }}
 
       - name: Update latest release body
         uses: mini-bomba/create-github-release@v1.1.3
