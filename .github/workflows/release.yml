@@ -127,8 +127,8 @@ jobs:
         with:
           failOnError: true
           configuration: release-notes.json
-          fromTag: v${{ steps.package-version.outputs.current-version }}
-          toTag: v${{ steps.package-version.outputs.current-version }}
+#          fromTag: v${{ steps.package-version.outputs.current-version }}
+#          toTag: v${{ steps.package-version.outputs.current-version }}
 
       - name: Notes output
         run: |
