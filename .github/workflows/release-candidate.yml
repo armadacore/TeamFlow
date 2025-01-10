@@ -92,9 +92,9 @@ jobs:
           slug: armadacore/TeamFlow
           fail_ci_if_error: true
 
-  clean-up:
+  prepare-release-draft:
     needs: code-check
-    if: ${{ success() }}
+    if: ${{ success() && github.event.pull_request.base.ref == 'master' }}
     runs-on: ubuntu-latest
     steps:
       - name: Remove drafts
@@ -102,8 +102,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  pre-build:
-    needs: clean-up
+  release-draft:
+    needs: prepare-release-draft
     if: ${{ success() && github.event.pull_request.base.ref == 'master' }}
     strategy:
       fail-fast: false
@@ -189,7 +189,7 @@ jobs:
           args: ${{ matrix.args }}
 
   release-notes:
-    needs: pre-build
+    needs: release-draft
     if: ${{ success() }}
     runs-on: ubuntu-latest
     steps:
@@ -207,8 +207,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           failOnError: true
-#         fromTag: ${{ steps.get-latest-tag.outputs.tag }}
-          toTag: v${{ steps.package-version.outputs.current-version }}
+          fromTag: v${{ steps.package-version.outputs.current-version }}
+#          toTag: v${{ steps.package-version.outputs.current-version }}
           configuration: release-notes.json
 
       - name: Update body
