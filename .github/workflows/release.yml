@@ -8,7 +8,7 @@ on:
       - closed
 
 jobs:
-  release-clean-up:
+  prepare-release:
     runs-on: ubuntu-latest
     steps:
       - name: Remove drafts
@@ -17,7 +17,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release:
-    needs: release-clean-up
+    needs: prepare-release
     if: ${{ success() }}
     strategy:
       fail-fast: false
