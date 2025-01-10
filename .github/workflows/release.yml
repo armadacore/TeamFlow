@@ -22,7 +22,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Delete current release assets
-        uses: andreaswilli/delete-release-assets-action@v4
+        uses: andreaswilli/delete-release-assets-action@v4.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           deleteOnlyFromDrafts: false
