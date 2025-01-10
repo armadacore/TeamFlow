@@ -207,8 +207,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           failOnError: true
-#         fromTag: ${{ steps.get-latest-tag.outputs.tag }}
-          toTag: ${{ steps.package-version.outputs.current-version }}
+          fromTag: v${{ steps.package-version.outputs.current-version }}
+#          toTag: v${{ steps.package-version.outputs.current-version }}
           configuration: release-notes.json
 
       - name: Update body
