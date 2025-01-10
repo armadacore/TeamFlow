@@ -8,7 +8,7 @@ on:
       - closed
 
 jobs:
-  clean-up:
+  release-clean-up:
     runs-on: ubuntu-latest
     steps:
       - name: Remove drafts
@@ -16,8 +16,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  do-publish:
-    needs: clean-up
+  release:
+    needs: release-clean-up
     if: ${{ success() }}
     strategy:
       fail-fast: false
@@ -104,7 +104,7 @@ jobs:
           args: ${{ matrix.args }}
 
   release-notes:
-    needs: do-publish
+    needs: release
     if: ${{ success() }}
     runs-on: ubuntu-latest
     steps:
@@ -122,8 +122,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           failOnError: true
-          #         fromTag: ${{ steps.get-latest-tag.outputs.tag }}
-          toTag: v${{ steps.package-version.outputs.current-version }}
+#         fromTag: ${{ steps.get-latest-tag.outputs.tag }}
+          toTag: ${{ steps.package-version.outputs.current-version }}
           configuration: release-notes.json
 
       - name: Update body
