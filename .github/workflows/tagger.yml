@@ -2,8 +2,8 @@ name: Tagger
 
 on:
   push:
-    branches:
-      - develop
+    tags:
+      - 'v*.*.*'
 
 jobs:
   release-notes:
