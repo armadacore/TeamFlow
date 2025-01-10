@@ -3,7 +3,7 @@ name: Tagger
 on:
   release:
     types:
-      - created
+      - published
 
 jobs:
   release-notes:
