@@ -111,6 +111,7 @@ jobs:
 #    if: ${{ success() }}
     runs-on: ubuntu-latest
     steps:
+      -
       # wait one minute until system has recognized new release
 #      - name: Wait for finished release
 #        run: sleep 60
