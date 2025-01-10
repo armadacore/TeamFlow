@@ -22,11 +22,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Delete current release assets
-        uses: andreaswilli/delete-release-assets-action@v4.0.0
+        uses: mknejp/delete-release-assets@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          deleteOnlyFromDrafts: false
+          token: ${{ github.token }}
           tag: v${{ steps.package-version.outputs.current-version }}
+          assets: '*.zip'
 
       - name: Build Changelog
         id: release-notes
