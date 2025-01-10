@@ -1,35 +1,33 @@
 name: Release
 
 on:
-#  push:
-#    branches:
-#      - develop
   release:
     types:
       - published
-
-
-#  pull_request:
-#    branches:
-#      - master
-#    types:
-#      - closed
 
 jobs:
   prepare-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Remove drafts
-        uses: hugo19941994/delete-draft-releases@v1.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Get version from package.json
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.3.1
+
+      - name: Remove drafts
+        uses: hugo19941994/delete-draft-releases@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete current release assets
+        uses: andreaswilli/delete-release-assets-action@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          deleteOnlyFromDrafts: false
+          tag:
+#          tag: v${{ steps.package-version.outputs.current-version }}
 
       - name: Build Changelog
         id: release-notes
@@ -39,7 +37,7 @@ jobs:
         with:
           failOnError: true
           configuration: release-notes.json
-          fromTag: v0.0.0
+#          fromTag: v0.0.0
           toTag: v${{ steps.package-version.outputs.current-version }}
 
       - name: Notes output
