@@ -2,13 +2,13 @@ name: Release notes
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - '**'
-      - '!master'
-      - '!develop'
-    tags:
-      - 'v*.*.*'
+#  push:
+#    branches:
+#      - '**'
+#      - '!master'
+#      - '!develop'
+#    tags:
+#      - 'v*.*.*'
 
 jobs:
   collect-notes:
@@ -31,10 +31,6 @@ jobs:
 #          fromTag: ${{ steps.get-latest-tag.outputs.tag }}
           toTag: ${{ steps.get-latest-tag.outputs.tag }}
           configuration: release-notes.json
-
-      - name: Output notes
-        run: |
-          echo "${{ steps.release-notes.outputs.changelog }}"
 
       - name: Update body
         uses: mini-bomba/create-github-release@v1.1.3
