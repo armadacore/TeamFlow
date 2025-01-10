@@ -38,9 +38,8 @@ jobs:
 
       - name: Update body
         uses: mini-bomba/create-github-release@v1.1.3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag: "latest"
           token: ${{ secrets.GITHUB_TOKEN }}
+          tag: "latest"
+          name: ${{ steps.get-latest-tag.outputs.tag }}
           body: ${{ steps.release-notes.outputs.changelog }}
