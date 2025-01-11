@@ -19,16 +19,6 @@
 			"key": "documentations",
 			"title": "## 📚 Documentations",
 			"labels": ["documentation", "doc"]
-		},
-		{
-			"key": "chore",
-			"title": "## ⚙️ Chore",
-			"labels": ["chore"]
-		},
-		{
-			"key": "cicd",
-			"title": "## 📦 CICD",
-			"labels": ["cicd", "ci"]
 		}
 	],
 	"ignore_labels": [
@@ -41,7 +31,6 @@
 	"max_pull_requests": 200,
 	"max_back_track_time_days": 365,
 	"base_branches": [
-		"develop",
-		"master"
+		"develop"
 	]
 }
