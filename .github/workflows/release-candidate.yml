@@ -1,11 +1,10 @@
 name: Release candidate
 
 on:
-  workflow_dispatch:
-#  pull_request:
-#    branches:
-#      - master
-#      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
 
 jobs:
   vulnerability-check:
