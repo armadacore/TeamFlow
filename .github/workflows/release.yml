@@ -17,10 +17,7 @@ jobs:
         uses: martinbeentjes/npm-get-version-action@v1.3.1
 
       - name: Compare release version with package.json version
-        env:
-          GITHUB_REF_NAME: ${{ github.ref_name }}
-          PACKAGE_VERSION: v${{ steps.package-version.outputs.current-version }}
-        if: ${{GITHUB_REF_NAME != PACKAGE_VERSION}}
+        if: ${{ github.ref_name != format('v{0}', steps.package-version.outputs.current-version) }}
         run: |
           echo "::error::The release version ${{ github.ref_name }} is different to package.json verions v${{ steps.package-version.outputs.current-version }}"
           exit 1
